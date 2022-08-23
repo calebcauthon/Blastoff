@@ -11,7 +11,7 @@ const int BUTTON_PIN = 2;
 AceButton button(BUTTON_PIN);
 void handleEvent(AceButton*, uint8_t, uint8_t);
 
-// events
+// event names
 int bootup = 1;
 int heartbeat = 2;
 int buttonPush = 3;
@@ -19,7 +19,9 @@ int buttonPush = 3;
 // info's
 int timestamp = 1;
 int location = 2;
+int eventType = 3;
 
+int id = 1;
 
 char buffer[50];
 char startTemplate[20] = "START-%i"; // event
@@ -32,9 +34,13 @@ Vector<int> v_names(names, 10);
 int values [10];
 Vector<int> v_values(values, 10);
 
-void printEventStart(int id) {
-  sprintf(buffer, startTemplate, id);
+int printEventStart() {
+  int thisId = id;
+  sprintf(buffer, startTemplate, thisId);
   Serial.println(buffer);
+  id++;
+
+  return thisId;
 }
 
 void printEventInfo(int eventId, int name, int value) {
@@ -47,33 +53,18 @@ void printEventEnd(int id) {
   Serial.println(buffer);
 }
 
-void sendEvent(int event, Vector<int> names, Vector<int> values) {
-  printEventStart(bootup);
-  for(int i = 0; i < names.size(); i++) {
-    printEventInfo(event, names.at(i), values.at(i));
-  }
-  printEventEnd(event);
+void addEventInfo(int event, int attributeName, int value) {
+  printEventInfo(event, attributeName, value);
 }
 
-void resetSerialParameters() {
-  v_names.clear();
-  v_values.clear(); 
-}
-
-void triggerEventStart(int event) {
-  printEventStart(event);
-  //resetSerialParameters();
-}
-
-void addEventInfo(int event, int name, int value) {
-  printEventInfo(event, name, value);
-  //v_names.push_back(name);
-  //v_values.push_back(value);
+int triggerEventStart(int event) {
+  int thisId = printEventStart();
+  addEventInfo(thisId, eventType, event);
+  return thisId;
 }
 
 void triggerEventEnd(int event) {
   printEventEnd(event);
-  //sendEvent(event, v_names, v_values);
 }
 
 int buttonInput = 2;
@@ -82,10 +73,9 @@ void setup() {
 
   screen.init();
 
-  triggerEventStart(bootup);
-  addEventInfo(bootup, timestamp, millis());
-  addEventInfo(bootup, location, 35);
-
+  int bootupId = triggerEventStart(bootup);
+  addEventInfo(bootupId, timestamp, millis());
+  triggerEventEnd(bootupId);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   ButtonConfig* buttonConfig = button.getButtonConfig();
@@ -114,8 +104,9 @@ void handleEvent(AceButton* /* button */, uint8_t eventType,
   switch (eventType) {
     case AceButton::kEventPressed:
       Serial.println("button push.");
-      triggerEventStart(buttonPush);
-      triggerEventEnd(buttonPush);
+      int buttonPushId = triggerEventStart(buttonPush);
+      addEventInfo(buttonPushId, timestamp, millis());
+      triggerEventEnd(buttonPushId);
       break;
     case AceButton::kEventReleased:
       break;
