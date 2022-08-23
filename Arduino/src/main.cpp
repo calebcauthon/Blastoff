@@ -11,6 +11,7 @@ AceButton button(BUTTON_PIN);
 void handleEvent(AceButton*, uint8_t, uint8_t);
 
 const int SLIDER_PIN = A1;
+const int KNOB_PIN = A0;
 
 // event names
 int bootup = 1;
@@ -30,6 +31,7 @@ int identification = 7;
 
 // identification
 int sliderId = 1;
+int knobId = 2;
 
 int id = 1;
 
@@ -96,8 +98,15 @@ void setup() {
   buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
 
   pinMode(SLIDER_PIN, INPUT);
+  pinMode(KNOB_PIN, INPUT);
+
   int initId = triggerEventStart(inputInitialization);
   addEventInfo(initId, identification, sliderId);
+  addEventInfo(initId, timestamp, millis());
+  triggerEventEnd(initId);
+
+  initId = triggerEventStart(inputInitialization);
+  addEventInfo(initId, identification, knobId);
   addEventInfo(initId, timestamp, millis());
   triggerEventEnd(initId);
 }
@@ -114,11 +123,25 @@ void sliderCheck() {
     triggerEventEnd(sliderEventId);
     lastSliderValue = sliderValue;
   }
-  
+}
+
+int lastKnobValue = 0;
+void knobCheck() {
+  int knobValue = analogRead(KNOB_PIN);
+  int diff = abs(knobValue - lastKnobValue);
+  if (diff > 100) {
+    int knobEventId = triggerEventStart(valueChange);
+    addEventInfo(knobEventId, identification, knobId);
+    addEventInfo(knobEventId, timestamp, millis());
+    addEventInfo(knobEventId, value, knobValue);
+    triggerEventEnd(knobEventId);
+    lastKnobValue = knobValue;
+  }
 }
 
 void loop() {
   sliderCheck();
+  knobCheck();
   button.check();
 }
 
