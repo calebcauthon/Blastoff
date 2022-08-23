@@ -12,7 +12,8 @@ parameterValues = {
         "5": "InputInit"
     }, 
     "Identification": {
-        "1": "Slider"
+        "1": "Slider",
+        "2": "Knob"
     }
 }
 
