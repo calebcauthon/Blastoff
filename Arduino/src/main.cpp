@@ -6,20 +6,30 @@ using namespace ace_button;
 
 Screen screen;
 
-
 const int BUTTON_PIN = 2;
 AceButton button(BUTTON_PIN);
 void handleEvent(AceButton*, uint8_t, uint8_t);
+
+const int SLIDER_PIN = A1;
 
 // event names
 int bootup = 1;
 int heartbeat = 2;
 int buttonPush = 3;
+int valueChange = 4;
+int inputInitialization = 5;
 
 // info's
 int timestamp = 1;
 int location = 2;
 int eventType = 3;
+int value = 4;
+int minimum = 5;
+int maximum = 6;
+int identification = 7;
+
+// identification
+int sliderId = 1;
 
 int id = 1;
 
@@ -85,16 +95,30 @@ void setup() {
   buttonConfig->setFeature(ButtonConfig::kFeatureLongPress);
   buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
 
+  pinMode(SLIDER_PIN, INPUT);
+  int initId = triggerEventStart(inputInitialization);
+  addEventInfo(initId, identification, sliderId);
+  addEventInfo(initId, timestamp, millis());
+  triggerEventEnd(initId);
 }
 
-int i = 0;
-void loop() {
-  if (false && Serial.available() > 0) {
-    String data = Serial.readStringUntil('\n');
-    if (data.charAt(0) == '9') {
-      screen.showText("Command received.");
-    }
+int lastSliderValue = 0;
+void sliderCheck() {
+  int sliderValue = analogRead(SLIDER_PIN);
+  int diff = abs(sliderValue - lastSliderValue);
+  if (diff > 100) {
+    int sliderEventId = triggerEventStart(valueChange);
+    addEventInfo(sliderEventId, identification, sliderId);
+    addEventInfo(sliderEventId, timestamp, millis());
+    addEventInfo(sliderEventId, value, sliderValue);
+    triggerEventEnd(sliderEventId);
+    lastSliderValue = sliderValue;
   }
+  
+}
+
+void loop() {
+  sliderCheck();
   button.check();
 }
 
@@ -103,7 +127,6 @@ void handleEvent(AceButton* /* button */, uint8_t eventType,
 
   switch (eventType) {
     case AceButton::kEventPressed:
-      Serial.println("button push.");
       int buttonPushId = triggerEventStart(buttonPush);
       addEventInfo(buttonPushId, timestamp, millis());
       triggerEventEnd(buttonPushId);
