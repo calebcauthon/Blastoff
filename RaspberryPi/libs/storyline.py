@@ -12,7 +12,11 @@ class Storyline:
 
 
   def start(self):
-    pass
+    for directive in self.current_scene.getInit():
+      if ("action" in directive):
+        actionType = directive["action"]["type"]
+        if (directive["action"]["type"] == "serial"):
+          self.executeSerialDirective(directive)
 
   def gotoScene(self, sceneName):
     for scene in self.scenes:
@@ -23,9 +27,13 @@ class Storyline:
     for directive in self.current_scene.advances():
       if (directive["on"] == eventInfo["data"]["EventType"]):
         if (directive["action"]["type"] == "serial"):
-          message = directive["action"]["message"]
-          self.serial.send(message)
+          self.executeSerialDirective(directive)
         elif (directive["action"]["type"] == "next"): 
           sceneName = directive["action"]["scene"] 
           self.gotoScene(sceneName)
+
+  def executeSerialDirective(self, directive):
+    message = directive["action"]["message"]
+    self.serial.send(message)
+
     
