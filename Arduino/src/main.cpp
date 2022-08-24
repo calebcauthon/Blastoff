@@ -109,6 +109,8 @@ void setup() {
   addEventInfo(initId, identification, knobId);
   addEventInfo(initId, timestamp, millis());
   triggerEventEnd(initId);
+
+  screen.showText("Start!");
 }
 
 int lastSliderValue = 0;
@@ -139,9 +141,19 @@ void knobCheck() {
   }
 }
 
+void serialCheck() {
+  const int MAX_MESSAGE_LENGTH = 20;
+  if (Serial.available() > 0) {
+    String s_message;
+    s_message = Serial.readStringUntil('\n');
+    screen.showText(s_message);
+  }
+}
+
 void loop() {
   sliderCheck();
   knobCheck();
+  serialCheck();
   button.check();
 }
 
