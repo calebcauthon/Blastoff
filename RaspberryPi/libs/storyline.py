@@ -24,6 +24,9 @@ class Storyline:
         self.current_scene = scene
         self.start()
 
+  def process(self, eventInfo):
+    return self.event(eventInfo)
+
   def event(self, eventInfo):
     for directive in self.current_scene.advances():
       if (directive["on"] == eventInfo["data"]["EventType"]):

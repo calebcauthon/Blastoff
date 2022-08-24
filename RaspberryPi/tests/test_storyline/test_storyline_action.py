@@ -38,3 +38,34 @@ def test_storyline_action():
   })
 
   mockSerial.send.assert_called_with("1-Show this text")
+
+def test_storyline_process():
+  scene1 = {
+    "name": "scene1",
+    "advances": [
+      {
+        "on": "Bootup",
+        "action": {
+          "type": "serial",
+          "message": "1-Show this text"
+        }
+      }
+    ]
+  }
+
+  mockSerial = MagicMock()
+
+  storyline = storylib.Storyline()
+  storyline.serial = mockSerial
+  storyline.setup({ "scenes": [scene1] })
+
+  storyline.start()
+  storyline.process({
+      "eventId": "1",
+      "status": "Ended",
+      "data": {
+          "EventType": "Bootup"
+      }
+  })
+
+  mockSerial.send.assert_called_with("1-Show this text")
