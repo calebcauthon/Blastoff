@@ -65,29 +65,4 @@ def test_condition_true(data, condition, expected_call_list):
   
 
   assert mockSerial.send.call_args_list == expected_call_list
-  
-def test_condition_false():
-  scene1 = basics.build_empty_scene()
-  on_button = basics.build_on_button_push()
-  serial_action = basics.build_serial("the text")
-  on_button["action"] = serial_action
-  scene1["advances"].append(on_button)
-
-  on_button["condition"] = basics.build_equals_condition("the value", "250")
-
-  mockSerial = MagicMock()
-  storyline = Storyline()
-  storyline.serial = mockSerial
-  storyline.setup({
-    "scenes": [scene1]
-  })
-
-  storyline.start()
-  storyline.process({
-    "data": {
-      "EventType": "ButtonPush",
-      "the value": "255"
-    }
-  })
-
-  mockSerial.send.assert_not_called()
+ 
