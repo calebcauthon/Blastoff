@@ -1,4 +1,5 @@
 from libs import scene as scenelib
+from libs.scene_templates import basics
 import time
 
 class Storyline:
@@ -32,8 +33,7 @@ class Storyline:
 
   def event(self, eventInfo):
     for directive in self.current_scene.advances():
-      if (directive["on"] == eventInfo["data"]["EventType"]):
-        print(f"Received event with recognized type: {eventInfo} \n   which triggers directive: {directive}")
+      if (directive["on"] == eventInfo["data"]["EventType"] and ("condition" not in directive or self.isConditionMet(directive["condition"], eventInfo["data"]))):
         if (directive["action"]["type"] == "serial"):
           self.executeSerialDirective(directive)
         elif (directive["action"]["type"] == "next"): 
@@ -46,4 +46,14 @@ class Storyline:
     self.serial.send(message)
     print(f"sending serial message: {message}")
 
-    
+  def isConditionMet(self, condition, eventData):
+    for requirements in condition["requirements"]:
+      field = requirements["field"]
+      expected_value = requirements["value"]
+      operator = requirements["operator"]
+      
+      if (operator in basics.compare):
+        if basics.compare[operator](expected_value, eventData[field]) == False:
+          return False
+
+    return True
