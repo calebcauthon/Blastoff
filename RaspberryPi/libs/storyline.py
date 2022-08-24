@@ -22,6 +22,7 @@ class Storyline:
     for scene in self.scenes:
       if scene.name == sceneName:
         self.current_scene = scene
+        self.start()
 
   def event(self, eventInfo):
     for directive in self.current_scene.advances():
