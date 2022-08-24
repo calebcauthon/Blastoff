@@ -40,40 +40,25 @@ def build_goto_scene(name):
 
 EQUALS = "equals"
 compare[EQUALS] = lambda a, b: b == a
-def build_equals_condition(name, value):
-  return {
-    "requirements": [
-      {
-        "field": name,
-        "value": value,
-        "operator": EQUALS
-      }
-    ]
-  }
-
 GREATER_THAN = "greater_than"
 compare[GREATER_THAN] = lambda a, b: b > a
-
-def build_greater_than_condition(name, value):
-  return {
-    "requirements": [
-      {
-        "field": name,
-        "value": value,
-        "operator": GREATER_THAN
-      }
-    ]
-  }
-
 LESS_THAN = "less_than"
 compare[LESS_THAN] = lambda a, b: b < a
-def build_less_than_condition(name, value):
+
+def build_simple_condition(name, value, operator):
   return {
     "requirements": [
       {
         "field": name,
         "value": value,
-        "operator": LESS_THAN
+        "operator": operator
       }
     ]
   }
+
+def build_equals_condition(name, value):
+  return build_simple_condition(name, value, EQUALS);
+def build_greater_than_condition(name, value):
+  return build_simple_condition(name, value, GREATER_THAN);
+def build_less_than_condition(name, value):
+  return build_simple_condition(name, value, LESS_THAN);
