@@ -1,7 +1,7 @@
 from libs import storyline as storylib
 from unittest.mock import MagicMock
 
-def test_storyline():
+def test_storyline_action():
   scene1 = {
     "init": [
       
