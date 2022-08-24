@@ -1,4 +1,5 @@
 from libs import scene as scenelib
+import time
 
 class Storyline:
 
@@ -12,16 +13,18 @@ class Storyline:
 
 
   def start(self):
-    for directive in self.current_scene.getInit():
-      if ("action" in directive):
-        actionType = directive["action"]["type"]
-        if (directive["action"]["type"] == "serial"):
-          self.executeSerialDirective(directive)
+    self.event({
+      "data": {
+        "EventType": "init"
+      }
+    })
 
   def gotoScene(self, sceneName):
+    print(f"gotoScene('{sceneName}')")
     for scene in self.scenes:
       if scene.name == sceneName:
         self.current_scene = scene
+        print(f"self.start() while current scene is '{self.current_scene.name}'")
         self.start()
 
   def process(self, eventInfo):
@@ -30,6 +33,7 @@ class Storyline:
   def event(self, eventInfo):
     for directive in self.current_scene.advances():
       if (directive["on"] == eventInfo["data"]["EventType"]):
+        print(f"Received event with recognized type: {eventInfo} \n   which triggers directive: {directive}")
         if (directive["action"]["type"] == "serial"):
           self.executeSerialDirective(directive)
         elif (directive["action"]["type"] == "next"): 
@@ -37,7 +41,9 @@ class Storyline:
           self.gotoScene(sceneName)
 
   def executeSerialDirective(self, directive):
+    print(f"executeSerialDirective({directive})")
     message = directive["action"]["message"]
     self.serial.send(message)
+    print(f"sending serial message: {message}")
 
     

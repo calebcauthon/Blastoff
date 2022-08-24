@@ -5,27 +5,17 @@ from libs import decoder
 from events import parameterNames, parameterValues
 import events.parameter_names
 from libs import storyline as storylib
+from libs.scene_templates import basics
 
 events = {}
-scene1 = {
-    "name": "scene1",
-    "advances": [
-        {
-            "on": "Bootup",
-            "action": {
-                "type": "next",
-                "scene": "scene2"
-            }
-        },
-        {
-            "on": "ButtonPush",
-            "action": {
-                "type": "next",
-                "scene": "scene2"
-            }
-        }
-    ]
-}
+scene1 = basics.build_empty_scene()
+goto_scene_2 = basics.build_goto_scene("scene2")
+on_bootup = basics.build_on_bootup()
+on_bootup["action"] = goto_scene_2
+on_button_push = basics.build_on_button_push()
+on_button_push["action"] = goto_scene_2
+scene1["advances"].append(on_bootup)
+scene1["advances"].append(on_button_push)
 
 scene2 = {
     "name": "scene2",
