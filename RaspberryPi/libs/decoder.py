@@ -35,10 +35,9 @@ def decode(line, events, parameterNames, parameterValues, eventHandler):
                 if (value in parameterValues[name]):
                     value = parameterValues[name][value]
                 else:
-                    value = f"Unknown value for {name}: {value}"
+                    value = f"Unknown value for {name}: {value}\n"
 
-            print(f"{name}={value}")
             events[eventId]["data"][name] = value
     except Exception as e:
-        print(f"unable to decode {line}: {e}")
+        print(f"unable to decode {line}: {e}\n")
 
