@@ -57,8 +57,22 @@ def build_simple_condition(name, value, operator):
   }
 
 def build_equals_condition(name, value):
-  return build_simple_condition(name, value, EQUALS);
+  return build_simple_condition(name, value, EQUALS)
 def build_greater_than_condition(name, value):
-  return build_simple_condition(name, value, GREATER_THAN);
+  return build_simple_condition(name, value, GREATER_THAN)
 def build_less_than_condition(name, value):
-  return build_simple_condition(name, value, LESS_THAN);
+  return build_simple_condition(name, value, LESS_THAN)
+
+
+def build_multiple_condition(operations):
+  requirements = []
+  for item in operations:
+    name, value, operator = tuple(item)
+    requirements.append({
+      "field": name,
+      "value": value,
+      "operator": operator
+    })
+  return {
+    "requirements": requirements
+  }
