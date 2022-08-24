@@ -1,31 +1,43 @@
 from libs import storyline as storylib
+from libs import scene as scenelib
 from unittest.mock import MagicMock
+
+def test_storyline_current_scene():
+  scene1 = {
+      "name": "scene1"
+  }
+
+  storyline = storylib.Storyline()
+  storyline.setup({ "scenes": [scene1] })
+
+  assert storyline.current_scene.name == "scene1"
 
 def test_storyline_action():
   scene1 = {
-    "init": [
-      
-    ],
+    "name": "scene1",
     "advances": [
       {
         "on": "Bootup",
         "action": {
-          "type": "serial",
-          "message": "1-Show this text"
+          "type": "next",
+          "scene": "scene2"
         }
       }
       # on change knob to 5, go to scene 2
-    ],
-    "twists": {
-      # on too much time passes, perform x (but stay on this scene)
-    }
+    ]
+  }
+
+  scene2 = {
+    "name": "scene2"
   }
 
   mockSerial = MagicMock()
 
   storyline = storylib.Storyline()
   storyline.serial = mockSerial
-  storyline.setup(scene1)
+  storyline.setup({
+    "scenes": [scene1, scene2]
+  })
 
   storyline.start()
   storyline.event({
@@ -36,4 +48,4 @@ def test_storyline_action():
       }
   })
 
-  mockSerial.send.assert_called_with("1-Show this text")
+  assert storyline.current_scene.name == "scene2"
