@@ -20,3 +20,24 @@ def test_decode_event():
         "status": "Ended",
         "data": {}
     })
+
+def test_decode_info():
+    eventHandler = MagicMock()
+    eventHandler.process = MagicMock()
+
+    lines = [
+        "START-1",
+        "INFO-1:3:2",
+        "END-1"
+    ]
+    events = {}
+    for line in lines:
+        decoder.decode(line, events, parameterNames, parameterValues, eventHandler)
+
+    eventHandler.process.assert_called_with({
+        "eventId": "1",
+        "status": "Ended",
+        "data": {
+            "EventType": "Heartbeat"
+        }
+    })
