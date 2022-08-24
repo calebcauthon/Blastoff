@@ -9,7 +9,10 @@ def test_storyline():
     "advances": [
       {
         "on": "Bootup",
-        "action": { "serial": "1-Show this text" }
+        "action": {
+          "type": "serial",
+          "message": "1-Show this text"
+        }
       }
       # on change knob to 5, go to scene 2
     ],
