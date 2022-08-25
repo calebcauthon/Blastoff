@@ -47,12 +47,17 @@ class Storyline:
             data_field = action["field"]
             value = eventInfo["data"][data_field]
             self.variables[alias] = value
+          elif (action["type"] == "variable_increment"):
+            alias = action["alias"]
+            if alias not in self.variables:
+              self.variables[alias] = 0
+            self.variables[alias] = self.variables[alias] + 1
 
 
   def executeSerialDirective(self, action):
     message = action["message"]
     for alias, value in self.variables.items():
-      message = message.replace(f"__{alias}__", value)
+      message = message.replace(f"__{alias}__", str(value))
     self.serial.send(message)
     print(f"sending serial message: {message}")
 

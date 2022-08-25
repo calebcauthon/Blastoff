@@ -45,6 +45,12 @@ def build_variable(data_field, alias):
     "alias": alias
   }
 
+def build_variable_increment(data_field, alias):
+  return {
+    "type": "variable_increment",
+    "alias": alias
+  }
+
 def build_goto_scene(name):
   return {
     "type": "next",
