@@ -1,14 +1,17 @@
 import random
-
+from libs.scene import Scene
 compare = {}
 
 
 def build_empty_scene(name="scene1"):
   return {
-  "name": name,
-  "advances": [
-  ]
+    "name": name,
+    "advances": [
+    ]
 }
+
+def build_empty_scene_object(*args):
+  return Scene(build_empty_scene(*args))
 
 def build_on_bootup(): 
   return {

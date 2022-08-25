@@ -7,13 +7,13 @@ from libs.scene_templates import basics
 from libs.storyline import Storyline
 
 def test_storyline_variable_storage():
-  scene1 = basics.build_empty_scene()
+  scene1 = basics.build_empty_scene_object()
   on_slider = basics.build_on_value_change()
   variable_action = basics.build_variable("Value", "SliderValue")
   serial_action = basics.build_serial("Slider value was last seen at __SliderValue__")
-  on_slider["action"].append(variable_action)
-  on_slider["action"].append(serial_action)
-  scene1["advances"].append(on_slider)
+ 
+  scene1.when(on_slider, variable_action)
+  scene1.when(on_slider, serial_action)
 
   print(f"{scene1}")
 
@@ -21,7 +21,7 @@ def test_storyline_variable_storage():
 
   storyline = storylib.Storyline()
   storyline.serial = mockSerial
-  storyline.setup({ "scenes": [scene1] })
+  storyline.setup({ "scenes": [scene1.config] })
 
   storyline.start()
   storyline.event({
