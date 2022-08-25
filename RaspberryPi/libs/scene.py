@@ -1,3 +1,5 @@
+import libs.scene_templates
+
 class Scene:
   def __init__(self, config):
     self.config = config
@@ -15,10 +17,19 @@ class Scene:
 
     return self.config["advances"]
     
+  def on(self, eventType):
+    advance = Advance(libs.scene_templates.basics.build_on_event(eventType))
+    self.advances().append(advance.config)
+    return advance
 
-  def when(self, advance, actions):
-    if advance not in self.advances():
-      self.advances().append(advance)
+class Advance:
+  def __init__(self, config):
+    self.config = config
 
-    for action in actions:
-      advance["action"].append(action)
+  def saveAs(self, name):
+    action = libs.scene_templates.basics.build_variable("Value", "SliderValue")
+    self.config["action"].append(action)
+
+  def sendSerial(self, message):
+    action = libs.scene_templates.basics.build_serial(message)
+    self.config["action"].append(action)

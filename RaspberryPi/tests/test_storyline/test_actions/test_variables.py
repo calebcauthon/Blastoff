@@ -9,10 +9,10 @@ from libs.storyline import Storyline
 def test_storyline_variable_storage():
   scene1 = basics.build_empty_scene_object()
 
-  scene1.when(basics.build_on_value_change(), [
-    basics.build_variable("Value", "SliderValue"),
-    basics.build_serial("Slider value was last seen at __SliderValue__")
-  ])
+  scene1.on("ValueChange").saveAs("SliderValue")
+  scene1.on("ValueChange").sendSerial("Slider value was last seen at __SliderValue__")
+
+  print(scene1.config)
 
   mockSerial = MagicMock()
 

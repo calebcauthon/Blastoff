@@ -13,37 +13,25 @@ def build_empty_scene(name="scene1"):
 def build_empty_scene_object(*args):
   return Scene(build_empty_scene(*args))
 
-def build_on_bootup(): 
+def build_on_event(eventType):
   return {
     "name": get_random_name(),
-    "on": "Bootup",
+    "on": eventType,
     "active": True,
     "action": []
   }
+def build_on_bootup(): 
+  return build_on_event("Bootup")
+
 
 def build_on_init(): 
-  return {
-    "name": get_random_name(),
-    "on": "init",
-    "active": True,
-    "action": []
-  }
+  return build_on_event("init")
 
 def build_on_button_push():
-  return {
-    "name": get_random_name(),
-    "on": "ButtonPush",
-    "active": True,
-    "action": []
-  }
+  return build_on_event("ButtonPush")
 
 def build_on_value_change():
-  return {
-    "name": get_random_name(),
-    "on": "ValueChange",
-    "active": True,
-    "action": []
-  }
+  return build_on_event("ValueChange")
 
 def build_serial(message):
   return {
