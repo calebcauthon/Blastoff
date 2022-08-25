@@ -16,8 +16,9 @@ class Scene:
     return self.config["advances"]
     
 
-  def when(self, advance, action):
+  def when(self, advance, actions):
     if advance not in self.advances():
       self.advances().append(advance)
 
-    advance["action"].append(action)
+    for action in actions:
+      advance["action"].append(action)
