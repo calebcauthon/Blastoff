@@ -35,7 +35,7 @@ class Storyline:
 
   def event(self, eventInfo):
     for directive in self.current_scene.advances():
-      if (directive["on"] == eventInfo["data"]["EventType"] and ("condition" not in directive or self.isConditionMet(directive["condition"], eventInfo["data"]))):
+      if (directive["active"] == True and directive["on"] == eventInfo["data"]["EventType"] and ("condition" not in directive or self.isConditionMet(directive["condition"], eventInfo["data"]))):
         for action in directive["action"]:
           if (action["type"] == "serial"):
             self.executeSerialDirective(action)

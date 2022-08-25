@@ -1,9 +1,9 @@
 compare = {}
 
 
-def build_empty_scene():
+def build_empty_scene(name="scene1"):
   return {
-  "name": "scene1",
+  "name": name,
   "advances": [
   ]
 }
@@ -11,24 +11,28 @@ def build_empty_scene():
 def build_on_bootup(): 
   return {
     "on": "Bootup",
+    "active": True,
     "action": []
   }
 
 def build_on_init(): 
   return {
     "on": "init",
+    "active": True,
     "action": []
   }
 
 def build_on_button_push():
   return {
     "on": "ButtonPush",
+    "active": True,
     "action": []
   }
 
 def build_on_value_change():
   return {
     "on": "ValueChange",
+    "active": True,
     "action": []
   }
 

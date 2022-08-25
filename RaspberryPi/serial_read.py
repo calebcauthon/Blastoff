@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from cgitb import text
 import serial
 import time
 from libs import decoder
@@ -8,7 +9,21 @@ from libs import storyline as storylib
 from libs.scene_templates import basics
 
 events = {}
-scene1 = basics.build_empty_scene()
+opening_scene = basics.build_empty_scene()
+opening_scene["name"] = "Opening Scene"
+
+text1 = basics.build_on_init()
+text1["action"].append(arduinoShowOnScreen("Welcome! Press a button to continue."))
+
+text2 = basics.build_on_button_push()
+text2["action"].append(arduinoShowOnScreen("We've never had a captain as handsome as you."))
+text2["action"].append(basics.build_enable_advance("text3"))
+
+text3 = basics.build_on_button_push("text3")
+text3["enabled"] = False
+text3["action"].append(arduinoShowOnScreen("Let's get to that planet!"))
+
+
 goto_scene_2 = basics.build_goto_scene("scene2")
 on_bootup = basics.build_on_bootup()
 on_bootup["action"] = goto_scene_2
