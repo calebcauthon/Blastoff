@@ -52,7 +52,11 @@ class Storyline:
             if alias not in self.variables:
               self.variables[alias] = 0
             self.variables[alias] = self.variables[alias] + 1
-
+          elif (action["type"] == "activate"):
+            for scene in self.scenes:
+              for advance in scene.advances():
+                if (advance["name"] == action["action_id"]):
+                  advance["active"] = True
 
   def executeSerialDirective(self, action):
     message = action["message"]

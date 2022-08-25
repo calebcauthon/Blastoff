@@ -1,3 +1,5 @@
+import random
+
 compare = {}
 
 
@@ -10,6 +12,7 @@ def build_empty_scene(name="scene1"):
 
 def build_on_bootup(): 
   return {
+    "name": get_random_name(),
     "on": "Bootup",
     "active": True,
     "action": []
@@ -17,6 +20,7 @@ def build_on_bootup():
 
 def build_on_init(): 
   return {
+    "name": get_random_name(),
     "on": "init",
     "active": True,
     "action": []
@@ -24,6 +28,7 @@ def build_on_init():
 
 def build_on_button_push():
   return {
+    "name": get_random_name(),
     "on": "ButtonPush",
     "active": True,
     "action": []
@@ -31,6 +36,7 @@ def build_on_button_push():
 
 def build_on_value_change():
   return {
+    "name": get_random_name(),
     "on": "ValueChange",
     "active": True,
     "action": []
@@ -40,6 +46,12 @@ def build_serial(message):
   return {
     "type": "serial",
     "message": message
+  }
+
+def build_activate(id):
+  return {
+    "type": "activate",
+    "action_id": id
   }
 
 def build_variable(data_field, alias):
@@ -99,3 +111,7 @@ def build_multiple_condition(operations):
   return {
     "requirements": requirements
   }
+
+def get_random_name():
+  letters = "abcqwerasdfzxcv"
+  return ''.join(random.choice(letters) for i in range(10))
