@@ -2,7 +2,7 @@ from libs import storyline as storylib
 from unittest.mock import MagicMock
 from libs.scene_templates import basics
 
-def test_storyline_action():
+def test_storyline_bootup_action():
   scene1 = basics.build_empty_scene()
   on_bootup = basics.build_on_bootup()
   serial_action = basics.build_serial("1-Show this text")
