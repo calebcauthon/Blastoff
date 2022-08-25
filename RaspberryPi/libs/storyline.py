@@ -3,6 +3,8 @@ from libs.scene_templates import basics
 import time
 
 class Storyline:
+  def __init__(self):
+    self.variables = {}
 
   def setup(self, config):
     self.scenes = []
@@ -34,15 +36,23 @@ class Storyline:
   def event(self, eventInfo):
     for directive in self.current_scene.advances():
       if (directive["on"] == eventInfo["data"]["EventType"] and ("condition" not in directive or self.isConditionMet(directive["condition"], eventInfo["data"]))):
-        if (directive["action"]["type"] == "serial"):
-          self.executeSerialDirective(directive)
-        elif (directive["action"]["type"] == "next"): 
-          sceneName = directive["action"]["scene"] 
-          self.gotoScene(sceneName)
+        for action in directive["action"]:
+          if (action["type"] == "serial"):
+            self.executeSerialDirective(action)
+          elif (action["type"] == "next"): 
+            sceneName = action["scene"] 
+            self.gotoScene(sceneName)
+          elif (action["type"] == "variable"):
+            alias = action["alias"]
+            data_field = action["field"]
+            value = eventInfo["data"][data_field]
+            self.variables[alias] = value
 
-  def executeSerialDirective(self, directive):
-    print(f"executeSerialDirective({directive})")
-    message = directive["action"]["message"]
+
+  def executeSerialDirective(self, action):
+    message = action["message"]
+    for alias, value in self.variables.items():
+      message = message.replace(f"__{alias}__", value)
     self.serial.send(message)
     print(f"sending serial message: {message}")
 

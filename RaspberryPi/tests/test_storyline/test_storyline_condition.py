@@ -59,7 +59,7 @@ def test_condition_true(data, condition, expected_call_list):
   scene1 = basics.build_empty_scene()
   on_button = basics.build_on_button_push()
   serial_action = basics.build_serial("the text")
-  on_button["action"] = serial_action
+  on_button["action"].append(serial_action)
   scene1["advances"].append(on_button)
 
   on_button["condition"] = condition
@@ -86,14 +86,12 @@ def test_multiple_conditions():
   condition1 = basics.build_greater_than_condition("the value", "250")
   condition2 = basics.build_less_than_condition("the value", "255")
 
-  print(f"condition1: {condition1}")
   condition1["requirements"] = condition1["requirements"] + condition2["requirements"]  
-
 
   scene1 = basics.build_empty_scene()
   on_button = basics.build_on_button_push()
   serial_action = basics.build_serial("the text")
-  on_button["action"] = serial_action
+  on_button["action"].append(serial_action)
   scene1["advances"].append(on_button)
 
   on_button["condition"] = condition1

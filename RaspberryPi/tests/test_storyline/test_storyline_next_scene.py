@@ -22,7 +22,7 @@ def test_storyline_action_next_scene():
   scene1 = basics.build_empty_scene()
   next_scene = basics.build_goto_scene("scene2")
   on_bootup = basics.build_on_bootup()
-  on_bootup["action"] = next_scene
+  on_bootup["action"].append(next_scene)
   scene1["advances"].append(on_bootup)
 
   scene2 = basics.build_empty_scene()
@@ -45,14 +45,14 @@ def test_storyline_action_next_scene_init():
   scene1 = basics.build_empty_scene()
   on_bootup = basics.build_on_bootup()
   goto_scene = basics.build_goto_scene("scene2")
-  on_bootup["action"] = goto_scene
+  on_bootup["action"].append(goto_scene)
   scene1["advances"].append(on_bootup)
    
   scene2 = basics.build_empty_scene()
   scene2["name"] = "scene2"
   on_init = basics.build_on_init()
   serial_action = basics.build_serial("Scene 2 started")
-  on_init["action"] = serial_action
+  on_init["action"].append(serial_action)
   scene2["advances"].append(on_init)
 
   mockSerial = MagicMock()

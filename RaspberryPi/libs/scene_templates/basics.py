@@ -11,25 +11,38 @@ def build_empty_scene():
 def build_on_bootup(): 
   return {
     "on": "Bootup",
-    "action": {}
+    "action": []
   }
 
 def build_on_init(): 
   return {
     "on": "init",
-    "action": {}
+    "action": []
   }
 
 def build_on_button_push():
   return {
     "on": "ButtonPush",
-    "action": {}
+    "action": []
+  }
+
+def build_on_value_change():
+  return {
+    "on": "ValueChange",
+    "action": []
   }
 
 def build_serial(message):
   return {
     "type": "serial",
     "message": message
+  }
+
+def build_variable(data_field, alias):
+  return {
+    "type": "variable",
+    "field": data_field,
+    "alias": alias
   }
 
 def build_goto_scene(name):
