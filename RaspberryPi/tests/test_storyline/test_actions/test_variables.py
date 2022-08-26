@@ -5,14 +5,13 @@ from libs import scene as scenelib
 from unittest.mock import MagicMock
 from libs.scene_templates import basics
 from libs.storyline import Storyline
+from libs.advance import Advance
 
 def test_storyline_variable_storage():
   scene1 = basics.build_empty_scene_object()
 
   scene1.on("ValueChange").saveAs("SliderValue")
   scene1.on("ValueChange").sendSerial("Slider value was last seen at __SliderValue__")
-
-  print(scene1.config)
 
   mockSerial = MagicMock()
 

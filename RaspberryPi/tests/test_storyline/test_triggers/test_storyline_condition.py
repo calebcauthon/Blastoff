@@ -56,19 +56,14 @@ from libs.storyline import Storyline
   )
 ])
 def test_condition_true(data, condition, expected_call_list):
-  scene1 = basics.build_empty_scene()
-  on_button = basics.build_on_button_push()
-  serial_action = basics.build_serial("the text")
-  on_button["action"].append(serial_action)
-  scene1["advances"].append(on_button)
-
-  on_button["condition"] = condition
+  scene1 = basics.build_empty_scene_object()
+  scene1.on("ButtonPush", condition).sendSerial("the text")
 
   mockSerial = MagicMock()
   storyline = Storyline()
   storyline.serial = mockSerial
   storyline.setup({
-    "scenes": [scene1]
+    "scenes": [scene1.config]
   })
 
   storyline.start()
@@ -115,3 +110,29 @@ def test_multiple_conditions():
 
   assert mockSerial.send.call_args_list == []
  
+
+def test_variable_in_condition():
+  data = { "Value": "250" }
+  condition = basics.build_equals_condition("__savedValue__", "250")
+  expected_call_list = [mock.call("the text")]
+  scene1 = basics.build_empty_scene_object()
+  scene1.on("ButtonPush").saveAs("savedValue")
+  scene1.on("ButtonPush", condition).sendSerial("the text")
+
+  mockSerial = MagicMock()
+  storyline = Storyline()
+  storyline.serial = mockSerial
+  storyline.setup({
+    "scenes": [scene1.config]
+  })
+
+  storyline.start()
+  eventData = {
+    "EventType": "ButtonPush",
+  }
+  storyline.process({
+    "data": {**eventData, **data}
+  })
+  
+
+  assert mockSerial.send.call_args_list == expected_call_list

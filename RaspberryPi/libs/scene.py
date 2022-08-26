@@ -1,9 +1,11 @@
 import libs.scene_templates
+from libs.advance import Advance
 
 class Scene:
   def __init__(self, config):
     self.config = config
     self.name = config["name"]
+    self.serial = None
 
   def getInit(self):
     if ("init" in self.config):
@@ -17,19 +19,10 @@ class Scene:
 
     return self.config["advances"]
     
-  def on(self, eventType):
+  def on(self, eventType, condition=None):
     advance = Advance(libs.scene_templates.basics.build_on_event(eventType))
+    if (condition):
+      advance.addCondition(condition)
+    advance.serial = self.serial
     self.advances().append(advance.config)
     return advance
-
-class Advance:
-  def __init__(self, config):
-    self.config = config
-
-  def saveAs(self, name):
-    action = libs.scene_templates.basics.build_variable("Value", "SliderValue")
-    self.config["action"].append(action)
-
-  def sendSerial(self, message):
-    action = libs.scene_templates.basics.build_serial(message)
-    self.config["action"].append(action)

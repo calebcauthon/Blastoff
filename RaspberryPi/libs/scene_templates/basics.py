@@ -39,6 +39,12 @@ def build_serial(message):
     "message": message
   }
 
+def build_show_text(message):
+  return {
+    "type": "show_text",
+    "message": message
+  }
+
 def build_activate(id):
   return {
     "type": "activate",
