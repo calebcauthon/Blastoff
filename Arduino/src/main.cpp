@@ -81,7 +81,8 @@ void triggerEventEnd(int event) {
 
 int buttonInput = 2;
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
+  Serial.setTimeout(50);
 
   screen.init();
 
@@ -110,7 +111,7 @@ void setup() {
   addEventInfo(initId, timestamp, millis());
   triggerEventEnd(initId);
 
-  screen.showText("Start!");
+  screen.showText("Arduino Setup Complete");
 }
 
 int lastSliderValue = 0;
@@ -129,9 +130,10 @@ void sliderCheck() {
 
 int lastKnobValue = 0;
 void knobCheck() {
+  int granularity = 3;
   int knobValue = analogRead(KNOB_PIN);
   int diff = abs(knobValue - lastKnobValue);
-  if (diff > 100) {
+  if (diff > granularity) {
     int knobEventId = triggerEventStart(valueChange);
     addEventInfo(knobEventId, identification, knobId);
     addEventInfo(knobEventId, timestamp, millis());
@@ -142,11 +144,19 @@ void knobCheck() {
 }
 
 void serialCheck() {
-  const int MAX_MESSAGE_LENGTH = 20;
   if (Serial.available() > 0) {
     String s_message;
+    int time1 = millis();
     s_message = Serial.readStringUntil('\n');
+    int time2 = millis();
+    
+    int time3 = millis();
     screen.showText(s_message);
+    int time4 = millis();
+    sprintf(buffer, "It took %ims to read the serial", time2 - time1);
+    Serial.println(buffer);
+    sprintf(buffer, "It took %ims to call text()", time4 - time3);
+    Serial.println(buffer);
   }
 }
 
